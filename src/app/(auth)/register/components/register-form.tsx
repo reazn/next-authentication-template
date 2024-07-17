@@ -155,19 +155,14 @@ export const RegisterForm = () => {
             )}
           />
 
-          {/* {error && (
-            <Alert variant="destructive">
-              <Terminal className="h-4 w-4" />
-              <AlertTitle>Uhoh, we couldn&apos;t log you in</AlertTitle>
-              <AlertDescription>{error.message}</AlertDescription>
-            </Alert>
+          {/* TODO - remove */}
+          {error && (
+            <span>
+              {error.code} - {error.message}
+            </span>
           )}
 
-          <LoaderButton isLoading={isPending} className="w-full" type="submit">
-            Register
-          </LoaderButton> */}
-
-          <Button className="w-full" type="submit">
+          <Button className="w-full" type="submit" loading={isPending}>
             Register
           </Button>
         </form>
