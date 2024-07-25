@@ -5,25 +5,27 @@ import { unauthenticatedAction } from "@/auth/safe-actions";
 import { setSession } from "@/auth/session";
 import { redirect } from "next/navigation";
 import { createUser } from "@/data-access/users";
+import { passwordValidation } from "@/auth/validation";
 
-export const signUpAction = unauthenticatedAction
+export const registerAction = unauthenticatedAction
 .createServerAction()
 .input(
 	z.object({
-		username: z.string().min(3).max(20).optional().or(z.literal("")),
+		username: z.string().min(3).max(20),
 		email: z.string().email(),
-		password: z.string().min(8).max(255),
+		password: passwordValidation,
 	})
 )
 .handler(async ({ input }) => {
 	// TODO rate limit
-	// TODO register function instead WITH validation
 
 	const user = await createUser({
-		username: input.username,
 		email: input.email,
+		username: input.username,
 		password: input.password,
 	})
+
+	// TODO delay to prevent timing attacks
 
 	await setSession(user.id)
 	return redirect("/")
