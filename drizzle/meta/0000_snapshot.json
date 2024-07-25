@@ -1,5 +1,5 @@
 {
-  "id": "c2d58d3e-a5f8-407f-8088-78fcda49d073",
+  "id": "36399eda-9565-4556-816b-fbaa8ccf07be",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -58,13 +58,6 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "account_provider_unique": {
-          "name": "account_provider_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "provider"
-          ]
-        },
         "account_provider_id_unique": {
           "name": "account_provider_id_unique",
           "nullsNotDistinct": false,
@@ -87,6 +80,12 @@
         "user_id": {
           "name": "user_id",
           "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true
         },
@@ -127,7 +126,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "profile_username_unique": {
+          "name": "profile_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        }
+      }
     },
     "public.session": {
       "name": "session",
@@ -200,12 +207,6 @@
           "primaryKey": true,
           "notNull": true
         },
-        "username": {
-          "name": "username",
-          "type": "varchar(20)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "email": {
           "name": "email",
           "type": "text",
@@ -236,13 +237,6 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "user_username_unique": {
-          "name": "user_username_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
-        },
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,

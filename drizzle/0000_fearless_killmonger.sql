@@ -4,16 +4,17 @@ CREATE TABLE IF NOT EXISTS "account" (
 	"provider" text NOT NULL,
 	"provider_id" text NOT NULL,
 	"created_at" timestamp DEFAULT now(),
-	CONSTRAINT "account_provider_unique" UNIQUE("provider"),
 	CONSTRAINT "account_provider_id_unique" UNIQUE("provider_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "profile" (
 	"id" varchar(128) PRIMARY KEY NOT NULL,
 	"user_id" varchar(128) NOT NULL,
+	"username" varchar(20) NOT NULL,
 	"display_name" text,
 	"avatar_url" text,
-	"created_at" timestamp DEFAULT now()
+	"created_at" timestamp DEFAULT now(),
+	CONSTRAINT "profile_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
@@ -27,12 +28,10 @@ CREATE TABLE IF NOT EXISTS "session" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user" (
 	"id" varchar(128) PRIMARY KEY NOT NULL,
-	"username" varchar(20) NOT NULL,
 	"email" text,
 	"email_verified" timestamp,
 	"password" text,
 	"created_at" timestamp DEFAULT now(),
-	CONSTRAINT "user_username_unique" UNIQUE("username"),
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
