@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(inter.className, "min-h-screen bg-background font-sans")}
+        className={cn(inter.className, "bg-background min-h-screen font-sans")}
       >
         {children}
       </body>
