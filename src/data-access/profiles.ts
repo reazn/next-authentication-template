@@ -1,47 +1,63 @@
 import "server-only"
+
 import { db } from "@/db"
 import { profiles, users } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
 export const createProfile = async (userId: string, username: string) => {
-  const [profile] = await db.insert(profiles).values({
-    userId,
-    username,
-  }).onConflictDoNothing().returning()
+  const [profile] = await db
+    .insert(profiles)
+    .values({
+      userId,
+      username,
+    })
+    .onConflictDoNothing()
+    .returning()
 
-  return profile;
+  return profile
 }
 
-export const getProfile = async ({userId, email, username}: {userId?: string; email?: string; username?: string}) => {
+export const getProfile = async ({
+  userId,
+  email,
+  username,
+}: {
+  userId?: string
+  email?: string
+  username?: string
+}) => {
+  // await new Promise((resolve) => setTimeout(resolve, 10000))
+  let profile
+
   if (userId) {
-    return await db.query.profiles.findFirst({
-      where: eq(profiles.userId, userId)
+    profile = await db.query.profiles.findFirst({
+      where: eq(profiles.userId, userId),
     })
   }
 
   if (username) {
-    return await db.query.profiles.findFirst({
-      where: eq(profiles.username, username)
+    profile = db.query.profiles.findFirst({
+      where: eq(profiles.username, username),
     })
   }
 
   if (email) {
     const user = await db.query.users.findFirst({
-      where: eq(users.email, email)
+      where: eq(users.email, email),
     })
 
-    if (!user) return undefined;
-    
-    return await db.query.profiles.findFirst({
-      where: eq(profiles.userId, user.id)
+    if (!user) throw new Error("Profile not found")
+
+    profile = db.query.profiles.findFirst({
+      where: eq(profiles.userId, user.id),
     })
   }
-  
-  throw new Error("Profile not found");
+
+  return profile
 }
 
 export const checkAvailableUsername = async (username: string) => {
   return await db.query.profiles.findFirst({
-    where: eq(profiles.username, username)
-  })!!;
+    where: eq(profiles.username, username),
+  })!!
 }

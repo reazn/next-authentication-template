@@ -1,12 +1,12 @@
-"use server";
+"use server"
 
-import { authenticatedAction } from "@/auth/safe-actions";
-import { deleteUser } from "@/data-access/users";
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation"
+import { protectedAction } from "@/auth/safe-actions"
+import { deleteUser } from "@/data-access/users"
 
-export const deleteAccountAction = authenticatedAction
+export const deleteAccountAction = protectedAction
   .createServerAction()
   .handler(async ({ input, ctx }) => {
-    await deleteUser(ctx.user.id);
-    redirect("/login");
-})
+    await deleteUser(ctx.user.id)
+    redirect("/login")
+  })

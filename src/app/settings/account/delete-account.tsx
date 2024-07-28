@@ -1,13 +1,18 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
+import { useState } from "react"
+import { Profile } from "@/db/types"
+import { DialogTrigger } from "@radix-ui/react-dialog"
+import { useServerAction } from "zsa-react"
+
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -15,27 +20,25 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { DialogTrigger } from "@radix-ui/react-dialog";
-import { useState } from "react";
-import { deleteAccountAction } from "./actions";
-import { useServerAction } from "zsa-react";
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 
-export const DeleteAccount = () => {
-  const [deleteField, setDeleteField] = useState("");
-  const [open, setOpen] = useState(false);
-  const { execute, isPending, error } = useServerAction(deleteAccountAction);
+import { deleteAccountAction } from "./actions"
+
+export const DeleteAccount = ({ profile }: { profile: Profile }) => {
+  const [deleteField, setDeleteField] = useState("")
+  const [open, setOpen] = useState(false)
+  const { execute } = useServerAction(deleteAccountAction)
 
   const optionalFields = {
-    username: "reazn",
-    name: "",
-    email: "dddd@lew.ist",
-  };
+    name: profile.displayName,
+    username: profile.username,
+    confirm: "confirm",
+  }
 
   const deleteString = Object.values(optionalFields).find((field) => {
-    return field.trim().length >= 3;
-  });
+    return (field?.trim()?.length ?? 0) >= 3
+  })
 
   return (
     <Card className="border-red-600">
@@ -64,14 +67,14 @@ export const DeleteAccount = () => {
             </DialogHeader>
             <Label htmlFor="deleteField">
               Type{" "}
-              <code className="border rounded-sm px-1 bg-muted">
+              <code className="rounded-sm border bg-muted px-1">
                 <strong>{deleteString}</strong>
               </code>{" "}
               to confirm:
             </Label>
             <input
               id="deleteField"
-              className="h-9 pl-2 bg-transparent border outline-none rounded-md focus:border-muted-foreground w-full"
+              className="h-9 w-full rounded-md border bg-transparent pl-2 outline-none focus:border-muted-foreground"
               value={deleteField}
               onChange={(e) => setDeleteField(e.target.value)}
             />
@@ -84,7 +87,7 @@ export const DeleteAccount = () => {
                 disabled={deleteString !== deleteField}
                 onClick={() => {
                   if (deleteString === deleteField) {
-                    execute();
+                    execute()
                   }
                 }}
               >
@@ -95,5 +98,5 @@ export const DeleteAccount = () => {
         </Dialog>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
