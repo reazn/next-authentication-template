@@ -1,5 +1,5 @@
-import { assertAuthenticated } from "@/auth/session"
 import { env } from "@/env"
+import { assertAuthenticated } from "@/server/auth/session"
 import { createServerActionProcedure } from "zsa"
 
 const shapeErrors = ({ err }: any) => {
