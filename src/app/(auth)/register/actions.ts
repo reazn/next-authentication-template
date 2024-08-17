@@ -1,10 +1,10 @@
 "use server"
 
 import { redirect } from "next/navigation"
-import { publicAction } from "@/auth/safe-actions"
-import { setSession } from "@/auth/session"
-import { passwordValidation } from "@/auth/validation"
 import { createUser } from "@/data-access/users"
+import { publicAction } from "@/server/auth/safe-actions"
+import { setSession } from "@/server/auth/session"
+import { passwordValidation } from "@/server/auth/validation"
 import { z } from "zod"
 
 export const registerAction = publicAction

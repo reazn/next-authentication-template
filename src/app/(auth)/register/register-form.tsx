@@ -1,6 +1,6 @@
 "use client"
 
-import { passwordValidation } from "@/auth/validation"
+import { passwordValidation } from "@/server/auth/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 // import { useToast } from "@/components/ui/use-toast";
 // import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
