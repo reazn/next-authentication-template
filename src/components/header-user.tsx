@@ -1,5 +1,11 @@
-import Link from "next/link";
-import { LogOutIcon, MoonIcon, SettingsIcon, UserIcon } from "lucide-react";
+// import { cache } from "react"
+import Link from "next/link"
+// import { getProfile } from "@/data-access/profiles"
+import { getCurrentUser } from "@/server/auth/session"
+import { api } from "@/trpc/server"
+import { LogOutIcon, MoonIcon, SettingsIcon, UserIcon } from "lucide-react"
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,18 +13,13 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cache } from "react";
-import { getProfile } from "@/data-access/profiles";
-import { getCurrentUser } from "@/auth/session";
-import { Button } from "./ui/button";
+} from "@/components/ui/dropdown-menu"
 
-const userProfile = cache(getProfile);
- 
+import { Button } from "./ui/button"
+
 export const HeaderUser = async () => {
-  const user = await getCurrentUser();
-  const profile = await userProfile({ userId: user?.id });
+  const user = await getCurrentUser()
+  const profile = await api.profile.getProfile({ userId: user?.id })
 
   return user?.id ? (
     <DropdownMenu>
@@ -47,7 +48,7 @@ export const HeaderUser = async () => {
               <span className="text-base">
                 {profile?.displayName ?? "View profile"}
               </span>
-              <span className="text-muted-foreground text-sm">
+              <span className="text-sm text-muted-foreground">
                 @{profile?.username}
               </span>
             </div>
@@ -118,5 +119,5 @@ export const HeaderUser = async () => {
     <Link href="/login">
       <Button>Login</Button>
     </Link>
-  );
-};
+  )
+}
