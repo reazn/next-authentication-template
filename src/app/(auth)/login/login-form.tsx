@@ -1,14 +1,12 @@
 "use client"
 
-import { passwordValidation } from "@/auth/validation"
+import { useRouter } from "next/navigation"
+import { api } from "@/trpc/react"
 import { zodResolver } from "@hookform/resolvers/zod"
-// import { LoaderButton } from "@/components/loader-button";
 // import { useToast } from "@/components/ui/use-toast";
 // import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { useServerAction } from "zsa-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -22,24 +20,26 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-import { loginAction } from "./email/actions"
-
 const LoginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
 })
 
 export const LoginForm = () => {
-  // const { toast } = useToast();
+  const router = useRouter()
 
-  const { execute, isPending, error } = useServerAction(loginAction, {
-    onError({ err }) {
+  const login = api.auth.login.email.useMutation({
+    onError: (err) => {
+      console.log(err, "mutation error")
       // toast({
-      // title: "Something went wrong",
-      // description: err.message,
-      // variant: "destructive",
-      // });
-      console.log(err)
+      //   title: "Something went wrong",
+      //   description: err.message,
+      //   variant: "destructive",
+      // })
+    },
+    onSuccess: (data) => {
+      console.log(data, "mutation success")
+      router.push("/")
     },
   })
 
@@ -51,17 +51,13 @@ export const LoginForm = () => {
     },
   })
 
-  function onSubmit(values: z.infer<typeof LoginSchema>) {
-    execute(values)
-  }
-
   return (
     <div className="mx-auto max-w-[400px] space-y-6 py-24">
       <h1 className="text-center text-2xl font-bold">Login</h1>
 
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit((values) => login.mutate(values))}
           className="space-y-4"
           noValidate
         >
@@ -104,13 +100,13 @@ export const LoginForm = () => {
           />
 
           {/* TODO - remove */}
-          {error && (
+          {/* {error && (
             <span>
               {error.code} - {error.message}
             </span>
-          )}
+          )} */}
 
-          <Button className="w-full" type="submit" loading={isPending}>
+          <Button className="w-full" type="submit" loading={login.isPending}>
             Login
           </Button>
         </form>
