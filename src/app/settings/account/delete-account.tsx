@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Profile } from "@/db/types"
+import { useRouter } from "next/navigation"
+import { Profile } from "@/server/db/types"
+import { api } from "@/trpc/react"
 import { DialogTrigger } from "@radix-ui/react-dialog"
-import { useServerAction } from "zsa-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -23,12 +24,16 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 
-import { deleteAccountAction } from "./actions"
-
 export const DeleteAccount = ({ profile }: { profile: Profile }) => {
   const [deleteField, setDeleteField] = useState("")
   const [open, setOpen] = useState(false)
-  const { execute } = useServerAction(deleteAccountAction)
+  const router = useRouter()
+
+  const deleteUser = api.user.deleteUser.useMutation({
+    onSuccess: (err) => {
+      router.push("/login")
+    },
+  })
 
   const optionalFields = {
     name: profile.displayName,
@@ -87,7 +92,7 @@ export const DeleteAccount = ({ profile }: { profile: Profile }) => {
                 disabled={deleteString !== deleteField}
                 onClick={() => {
                   if (deleteString === deleteField) {
-                    execute()
+                    deleteUser.mutate({ userId: profile.userId })
                   }
                 }}
               >
