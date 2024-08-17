@@ -1,20 +1,32 @@
 import React, { cache } from "react"
-import { getCurrentUser } from "@/auth/session"
-import { getProfile } from "@/data-access/profiles"
+import { redirect } from "next/navigation"
+import { getCurrentUser } from "@/server/auth/session"
+import { api } from "@/trpc/server"
 
+import { ChangeEmail } from "./change-email"
 import { DeleteAccount } from "./delete-account"
-
-const userProfile = cache(getProfile)
+import { Sessions } from "./sessions"
 
 export default async function AccountPage() {
-  const user = await getCurrentUser()
-  const profile = await userProfile({ userId: user?.id })
-  if (!profile) return null
+  const currentUser = await getCurrentUser()
+
+  const user = await api.user.getUser({ userId: currentUser?.id })
+  const profile = await api.profile.getProfile({ userId: currentUser?.id })
+
+  // TODO maybe a login redirect?
+  if (!profile || !currentUser || !user) {
+    return redirect("/")
+  }
+
+  const sessions = await api.auth.session.getSessions({
+    userId: currentUser.id,
+  })
 
   return (
     <section className="flex flex-col gap-4">
-      <div>Email</div>
+      <ChangeEmail user={user} />
       <div>Auth connections component</div>
+      <Sessions sessions={sessions} />
       <DeleteAccount profile={profile} />
     </section>
   )

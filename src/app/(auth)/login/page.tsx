@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation"
 
 export default async function LoginPage() {
-  await redirect("/login/email");
-  return null;
+  await redirect("/login/email")
+  return null
 }

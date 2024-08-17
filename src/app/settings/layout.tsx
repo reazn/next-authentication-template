@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { getCurrentUser } from "@/auth/session"
+import { getCurrentUser } from "@/server/auth/session"
 
 import { Header } from "@/components/header"
 

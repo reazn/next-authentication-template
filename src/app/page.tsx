@@ -1,5 +1,5 @@
-import { getCurrentUser } from "@/auth/session"
-import { validateRequest } from "@/auth/validate-request"
+import { getCurrentUser } from "@/server/auth/session"
+import { validateRequest } from "@/server/auth/validate-request"
 
 export default async function Home() {
   const { user } = await validateRequest()

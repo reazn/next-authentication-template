@@ -1,13 +1,13 @@
 import React, { cache } from "react"
-import { getCurrentUser } from "@/auth/session"
-import { getProfile } from "@/data-access/profiles"
+// import { getProfile } from "@/data-access/profiles"
+import { getCurrentUser } from "@/server/auth/session"
 
-const userProfile = cache(getProfile)
+// const userProfile = cache(getProfile)
 
 export default async function ProfilePage() {
-  const user = await getCurrentUser()
-  const profile = await userProfile({ userId: user?.id })
-  if (!profile) return null
+  // const user = await getCurrentUser()
+  // const profile = await userProfile({ userId: user?.id })
+  // if (!profile) return null
 
   return (
     <section className="flex flex-col gap-4">
